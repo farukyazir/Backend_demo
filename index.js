@@ -1,12 +1,10 @@
 import express from "express"
 import dotenv from "dotenv"
 import  cors from "cors"
-
-app.use(cors())
 dotenv.config()
 const app = express()
 app.use(express.json())
-
+app.use(cors())
 let users =[
     {
         id:1,
@@ -75,6 +73,23 @@ app.put("/users/:id",(req,res)=>{
         data:user
     })
 })
-app.listen(process.env.PORT,()=>{
+app.delete("/users/:id",(req,res)=>{
+    const id = Number(req.params.id);
+    const user = users.find((user)=>user.id == id)
+    if(!user){
+        return res.status(404).json({
+            success:false,
+            message:"User not found" ,
+            data:user
+        })
+    }
+    users = users.filter((user)=>user.id !== id)
+    res.status(200).json({
+        success:true,
+        message:"User deleted successfully"
+    })
+})
+const PORT = process.env.PORT
+app.listen(PORT,()=>{
      console.log("Server is running on port 3000")
 })
